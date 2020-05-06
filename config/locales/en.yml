@@ -1,0 +1,155 @@
+# ----------------------
+# Organization of en.yml
+# ----------------------
+#
+# application.*.key = display_value
+# jobs.[MODULE].JOB.*.key = display_value
+# libs.MODULE.*.key = display_value
+# models.MODEL.COLUMN = { key: display_value, ... }
+# services.MODULE.SERVICE.*.key = display_value
+# presenters.MODULE.PRESENTER.*.key = display_value
+# CONTROLLER.ACTION.*.key = display_value
+#
+# CONTROLLER is always the plural version. For example: FoundersController#edit = founders.edit.*
+#
+# Order alphabetically where possible.
+#
+# Third-party customizations follow their own format. Record these at the end of the file. For example:
+#
+# activecord.* = Refer Activerecord documentation.
+#
+# Make sure you include links to documentation related to such third-party customizations for when we (undoubtedly)
+# forget what the strings were for.
+
+en:
+  jobs:
+    faculty_connect_session_reminder:
+      founder_reminder: ":exclamation: *Reminder:* Your team (%{startup_name}) has an office hour with <%{coach_url}|%{faculty_name}> starting in 30 minutes! You can <%{meeting_link}|click here> to join the meeting when it's time."
+      faculty_reminder: ":exclamation: *Reminder:* You have an office hour with <%{founder_url}|%{founder_name}> starting in 30 minutes!\nThe student plan to discuss the following questions:\n %{questions}\nYou can <%{meeting_link}|click here> to join the meeting when it's time."
+      ops_team_reminder: ":exclamation: *Reminder:* <%{founder_url}|%{founder_name}> has an office hour with <%{coach_url}|%{faculty_name}> starting in 30 minutes. Follow up!"
+
+    timeline_events:
+      verification_notification:
+        founder:
+          verified:
+            founder_event: "Your new timeline entry (<%{event_url}|%{event_title}>) has been verified by SV.CO"
+            startup_event: "Your new timeline entry (<%{event_url}|%{event_title}>) for <%{startup_url}|%{startup_name}> has been verified by SV.CO"
+          needs_improvement:
+            founder_event: "Your new timeline entry (<%{event_url}|%{event_title}>) has been marked as 'needs improvement'. Please submit a new and revised timeline event based on the feedback"
+            startup_event: "Your new timeline entry (<%{event_url}|%{event_title}>) for <%{startup_url}|%{startup_name}> has been marked as 'needs improvement'. Please submit a new and revised timeline event based on the feedback"
+          not_accepted:
+            founder_event: "Your new timeline entry (<%{event_url}|%{event_title}>) has not been accepted. Please edit and resubmit the modified timeline event based on the feedback"
+            startup_event: "The new timeline entry (<%{event_url}|%{event_title}>) submitted by you for <%{startup_url}|%{startup_name}> has not been accepted. Please edit and resubmit the modified timeline event based on the feedback"
+        team:
+          verified: "Your team <%{startup_url}|%{startup_name}> has a new verified timeline entry: <%{event_url}|%{event_title}>"
+          needs_improvement: "Your team <%{startup_url}|%{startup_name}> has a new timeline entry: (<%{event_url}|%{event_title}>) and has been marked as 'needs improvement'. Please submit a new and revised timeline event based on the feedback"
+          not_accepted: "The new timeline entry (<%{event_url}|%{event_title}>) submitted by  your team <%{startup_url}|%{startup_name}> has not been accepted. Please edit and resubmit the modified timeline event based on the feedback"
+        public:
+          verified: &jobs-timeline_events-verification_notification-public-verified |
+            <%{startup_url}|%{startup_name}> has a new verified timeline entry: <%{event_url}|%{event_title}>
+            *Description:* %{event_description}
+            %{links_attached_notice}
+          needs_improvement: *jobs-timeline_events-verification_notification-public-verified
+
+    targets:
+      send_session_reminders:
+        message: 'Reminder: "%{title}" will start in %{time_delta} (at %{time_exact}). Please check the Slack collective channel for the link to join session.'
+      send_session_feedback_notification:
+        message: |
+          Hello there! Thank you to all who attended today's live session by %{faculty_name}.
+
+          We hope that you found the session informative and worthwhile.
+
+          If you missed watching it live, we will have it up on the dashboard in a couple of days.
+
+          Kindly help us improve our sessions with some quick feedback: https://svlabs.typeform.com/to/h7g9Om?faculty=%{faculty_name_escaped}&session=%{session_title}&date=%{session_date}
+
+  libs:
+    lita:
+      handlers:
+        leaderboard:
+          help: Get the last published leaderboard for all levels in the collective.
+        targets:
+          help: Get a list of targets recently assigned to you and your team.
+          help_info: Get detailed information about a target from list.
+          choice_error: "I couldn't find your choice in my list of targets. It should be one of: `%{choices}`."
+          more_info: "Reply with `targets info [NUMBER]` for more information about a target."
+          unknown_username: |
+            I'm sorry, but your slack mention name `@%{slack_username}` isn't known to me.
+            Please update your slack mention name on your SV.CO profile, and try asking me again.
+
+  models:
+    faculty:
+      commitment:
+        part_time: Part-Time
+        full_time: Full-Time
+
+    founder:
+      # Founder.roles is actually an array. But the translation applies to each value individually.
+      role: &founder-role
+        product: Product
+        engineering: Engineering
+        design: Design
+
+    target:
+      role:
+        team: Team
+        founder: All Founders
+
+    timeline_event:
+      grade:
+        good: 'Good'
+        great: 'Great'
+        wow: 'Wow!'
+
+  presenters:
+    layouts:
+      footer:
+        address_html: "#360, 6th Main Road<br/>1<sup>st</sup> Block, Koramangala,<br/>Bengaluru &mdash; 560034"
+        email_address: support@pupilfirst.com
+
+  services:
+    targets:
+      create_or_update_calendar_event:
+        title: 'Live Session: %{title}'
+        description: |
+          The live session will be hosted using Zoom (conferencing tool). You can download Zoom software at this link:
+
+          https://zoom.us/download
+
+          Once downloaded, please sign in (or sign up) for Zoom with your email account.
+
+          The link to the session will be shared in the Collective Slack channel 15 minutes prior to the session.
+
+          Here is the general format for the session: 20 minutes talk + 10 mins Q&A. Please use the Q&A option in Zoom to post any questions you might have. They will be answered at the end of the session by the speaker.
+
+  admin:
+    connect_request:
+      cancel_request:
+        warning:  "Are you sure you want to cancel this 'confirmed' connect request? Note that you will have to manually delete the associated Zoom meeting and Google calendar event!"
+
+  admissions:
+    register:
+      email_error: "Our email delivery service refused to accept the supplied address. Please ensure that it is a valid email address. If you're still having issues, please contact us using live chat or at help@sv.co"
+
+  dashboard:
+    dashboard:
+      tour:
+        intro: Welcome to your personal dashboard! Your team's journey through this program will be showcased here.
+        level_select: The program is split into multiple levels, containing targets. New levels are unlocked when you complete <em>milestone</em> targets in each level.<br/><br/>You can go back to complete optional targets in previous levels, and you can also check out targets in future levels, but you can't submit work for those until they are unlocked.
+        target_group: Your target groups will have all the targets listed along with its completion status.
+        target: The target pane will have the name of the target and its completion status. On clicking the target, you will get detailed information on the target, the status and the target submission button.
+        target_status: This indicates the present status of the target.
+        final_message: That&rsquo;s it for now. If you have any doubts, don&rsquo;t hesitate to reach out to us for help.<br/><br/>Have fun!
+
+  resources:
+    index:
+      zero_results: There are no public resources in this library. You may need to be signed in to see private resources.
+      filter_zero_results: There are no resources with the current filter conditions. Try changing or clearing the filter.
+      filter_notice: Now showing resources that match the current filter. Clear the filter to see all available resources.
+
+  # These are custom error messages for the active_storage_validations gem.
+  errors:
+    messages:
+      content_type_invalid: "has an invalid content type"
+      limit_out_of_range: "total number is out of range"

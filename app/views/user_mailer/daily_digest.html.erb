@@ -1,0 +1,81 @@
+<%
+  school_name = @user.school.name
+  recipient_name = @user.name
+  def article(count)
+    count > 1 ? 'are' : 'is'
+  end
+%>
+
+<% content_for :title do %>
+  Daily digest from <%= school_name %>
+<% end %>
+
+<% content_for :title_button_text do %>
+  Visit <%= school_name %> homepage
+<% end %>
+
+<% content_for(:title_button_link, home_url) %>
+
+<% content_for :salutation do %>
+  Hello <%= recipient_name %>,
+<% end %>
+
+<% content_for :body do %>
+  <% if @updates[:updates_for_coach].present? %>
+    <% pending_submissions_count = @updates[:updates_for_coach].map { |s| s[:pending_submissions] }.sum %>
+    <p style="margin-top: 10px;">
+
+      There <%= article(pending_submissions_count) %> <strong><%= pending_submissions_count %></strong>
+      new <%= 'submission'.pluralize(pending_submissions_count) %> to review
+      in <%= pluralize(@updates[:updates_for_coach].length, 'course') %>
+      that you are a coach in:
+    </p>
+
+    <ul style="padding: 0; margin-top: 0; margin-left: 30px; list-style-type: circle;">
+      <% @updates[:updates_for_coach].each do |stats| %>
+        <li style="padding: 2px 0px;">
+          <%= link_to "#{stats[:course_name]}:", review_course_url(stats[:course_id]), style: 'color: #6025C0; border-radius: 8px; padding: 0px;' %>
+          <span><strong><%= stats[:pending_submissions] %></strong>
+            <% if stats[:is_team_coach] %>
+              <%= stats[:pending_submissions_for_coach] == 0 ? '(none of which are assigned to you)' : "(#{stats[:pending_submissions_for_coach]} assigned to you)" %>
+            <% end %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if @updates[:community_updates].present? %>
+    <% topics_count = @updates[:community_updates].values.map { |v| v[:topics].length }.sum %>
+    <p style="margin-top: 10px;">
+      There <%= article(topics_count) %> <strong><%= topics_count %></strong> new
+      <%= 'topic'.pluralize(topics_count) %> in <%= pluralize(@updates[:community_updates].length, 'community') %>
+      that you are a
+      part of.
+    </p>
+
+    <% @updates[:community_updates].each do |community_id, community_updates| %>
+      <%= link_to community_updates[:community_name], community_url(community_id), style: 'font-size: 120%; color: #6025C0; border-radius: 8px; padding: 0px 4px;' %>
+
+      <ul style="padding: 0; margin-top: 0; margin-left: 30px; list-style-type: circle;">
+        <% community_updates[:topics].each do |topic| %>
+          <li style="padding: 2px 0px;">
+            <%= link_to topic[:title], topic_url(topic[:id]) %>
+            <span style="font-size: 75%;">
+            &mdash; <strong><%= topic[:author] %></strong>
+              <%= topic[:type] == 'new' ? '' : "(no activity, asked #{pluralize(topic[:days_ago], 'day')} ago)" %>
+          </span>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+
+  <p style="font-size: 75%;">
+    You can control these emails from <%= link_to "your profile edit page", edit_user_url %>.
+  </p>
+<% end %>
+
+<% content_for(:signature) do %>
+  <div></div>
+<% end %>
